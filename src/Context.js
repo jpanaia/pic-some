@@ -3,6 +3,7 @@ const Context = React.createContext()
 
 function ContextProvider({children}) {
     const [allPhotos, setAllPhotos] = useState([])
+    const [cartItems, setCartItems] = useState([])
     
     useEffect(() => {
         const url = "https://raw.githubusercontent.com/bobziroll/scrimba-react-bootcamp-images/master/images.json"
@@ -11,7 +12,7 @@ function ContextProvider({children}) {
             try {
               const response = await fetch(url)
               const json = await response.json()
-             // console.log(json)
+              console.log(json)
               setAllPhotos(json)
             } catch (error) {
               console.log("error", error)
@@ -37,8 +38,16 @@ function ContextProvider({children}) {
         setAllPhotos(updatedArray)
     }
 
+    function addImageToCart(img) {
+        setCartItems(prevItems => [...prevItems, img])
+    }
+
+    function removeImageFromCart(img) {
+        setCartItems(cartItems.filter(item => item.id !== img.id))
+    }
+
     return (
-        <Context.Provider value={{allPhotos, toggleFavorite}}>
+        <Context.Provider value={{allPhotos, toggleFavorite, addImageToCart, removeImageFromCart, cartItems}}>
             {children}
         </Context.Provider>
     )
